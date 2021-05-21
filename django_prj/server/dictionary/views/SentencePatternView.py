@@ -3,15 +3,17 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import filterset
 from django.db import models
 import django_filters
+from drf_writable_nested import WritableNestedModelSerializer
 
 from server import permissions
+from server.serializer import ListSerializer
 from server.views import ModelViewSetPermissionSerializerMap
 from .ParaphraseView import ParaphraseSerializer
 from dictionary.models.SentencePatternTable import SentencePatternTable
 
 
-class SentencePatternSerializer(serializers.ModelSerializer):
-    paraphraseSet = ParaphraseSerializer(many=True, read_only=True)
+class SentencePatternSerializer(WritableNestedModelSerializer):
+    paraphraseSet = ListSerializer(child=ParaphraseSerializer())
     class Meta:
         model = SentencePatternTable
         fields = '__all__'

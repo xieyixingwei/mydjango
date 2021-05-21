@@ -11,8 +11,10 @@ def _parse_html_list(dictionary, prefix='', default=None):
     解决 不能解析 'sentencesForeign[0][en]': ['hello'], 'sentencesForeign[0][cn]': ['你好']
     """
     ret = {}
-    regex = re.compile(r'^%s\[([0-9]+)\]\[(.*)\]$' % re.escape(prefix))
+    regex = re.compile(r'^%s\[([0-9]+)\](.*)$' % re.escape(prefix))
     for field, value in dictionary.items():
+        print('--- field', field)
+        print('--- value', value)
         match = regex.match(field)
         if not match:
             continue
@@ -43,3 +45,7 @@ class ListSerializer(serializers.ListSerializer):
         if html.is_html_input(dictionary):
             return _parse_html_list(dictionary, prefix=self.field_name, default=empty) # 代替 html.parse_html_list()
         return dictionary.get(self.field_name, empty)
+
+
+
+

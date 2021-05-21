@@ -39,10 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'django_filters',
-    'dictionary',
-    'user',
-    'study',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -122,8 +119,3 @@ USE_L10N = True
 USE_TZ = True
 
 
-# 导入本地配置文件
-try:
-    from .local_settings import *
-except ImportError:
-    pass

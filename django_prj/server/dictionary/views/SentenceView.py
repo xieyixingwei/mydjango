@@ -1,20 +1,22 @@
 # -*- coding:utf-8 -*- 
 
-from rest_framework import serializers, response, request, generics
+from rest_framework import serializers
+from rest_framework.pagination import PageNumberPagination
+from django_filters import filterset
+from django.db import models
+import django_filters
+from drf_writable_nested import WritableNestedModelSerializer
+
 from server import permissions
 from dictionary.models.SentenceTable import SentenceTable
 from .GrammarView import GrammarSerializer
 from server.views import ModelViewSetPermissionSerializerMap
-from rest_framework.pagination import PageNumberPagination
-from django_filters import filterset, fields
-from rest_framework import filters
-from django.db import models
-import django_filters
+from server.serializer import ListSerializer
 from .GrammarView import GrammarSerializer
 
 
-class SentenceSerializer(serializers.ModelSerializer):
-    grammarSet = GrammarSerializer(many=True, read_only=True)
+class SentenceSerializer(WritableNestedModelSerializer):
+    grammarSet = ListSerializer(child=GrammarSerializer())
     class Meta:
         model = SentenceTable
         fields = '__all__'
