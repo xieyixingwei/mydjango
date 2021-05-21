@@ -3,6 +3,8 @@
 // JsonSerializer
 // **************************************************************************
 
+import 'package:flutter_prj/serializers/index.dart';
+
 import 'single_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
@@ -21,10 +23,10 @@ class DistinguishSerializer {
   SingleFile image = SingleFile('image', FileType.image);
   SingleFile vedio = SingleFile('vedio', FileType.video);
   List<String> wordsForeign = [];
-  List<SentenceSerializer> sentencesForeign = [];
+  List<SentencePatternSerializer> sentencePatternForeign = [];
 
   Future<bool> create({dynamic data, Map<String, dynamic> queries, bool cache=false}) async {
-    var res = await Http().request(HttpType.POST, '/api/dictionary/distinguish/', data:data ?? _formData, queries:queries, cache:cache, options: Options(contentType: "multipart/form-data"));
+    var res = await Http().request(HttpType.POST, '/api/dictionary/distinguish/', data:data ?? _formData, queries:queries, cache:cache);
     if(res != null) fromJson(res.data);
     return res != null;
   }
@@ -76,9 +78,9 @@ class DistinguishSerializer {
     wordsForeign = json['wordsForeign'] == null
                 ? []
                 : json['wordsForeign'].map<String>((e) => e as String).toList();
-    sentencesForeign = json['sentencesForeign'] == null
+    sentencePatternForeign = json['sentencePatternForeign'] == null
                 ? []
-                : json['sentencesForeign'].map<SentenceSerializer>((e) => SentenceSerializer().fromJson(e as Map<String, dynamic>)).toList();
+                : json['sentencePatternForeign'].map<SentencePatternSerializer>((e) => SentencePatternSerializer().fromJson(e as Map<String, dynamic>)).toList();
     _id = id;
     return this;
   }
@@ -87,12 +89,12 @@ class DistinguishSerializer {
     'id': id,
     'content': content,
     'wordsForeign': wordsForeign == null ? null : wordsForeign.map((e) => e).toList(),
-    'sentencesForeign': sentencesForeign == null ? null : sentencesForeign.map((e) => e.toJson()).toList(),
+    'sentencePatternForeign': sentencePatternForeign == null ? null : sentencePatternForeign.map((e) => e.toJson()).toList(),
   };
   FormData get _formData {
     var jsonObj = toJson();
     //print(jsonObj);
-    //jsonObj['sentencesForeign'] = json.encode(jsonObj['sentencesForeign']);
+    //jsonObj['sentencePatternForeign'] = json.encode(jsonObj['sentencePatternForeign']);
     //print(jsonObj);
     var formData = FormData.fromMap(jsonObj, ListFormat.multi);
     if(image.mptFile != null) formData.files.add(image.file);
@@ -107,7 +109,7 @@ class DistinguishSerializer {
     image.from(instance.image);
     vedio.from(instance.vedio);
     wordsForeign = List.from(instance.wordsForeign);
-    sentencesForeign = List.from(instance.sentencesForeign.map((e) => SentenceSerializer().from(e)).toList());
+    sentencePatternForeign = List.from(instance.sentencePatternForeign.map((e) => SentencePatternSerializer().from(e)).toList());
     _id = instance._id;
     return this;
   }

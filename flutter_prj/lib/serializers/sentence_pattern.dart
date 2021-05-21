@@ -49,11 +49,11 @@ class SentencePatternSerializer {
       res = await clone.create(data:data, queries:queries, cache:cache);
       if(res == false) return false;
       id = clone.id;
-      if(paraphraseSet != null){await Future.forEach(paraphraseSet, (e) async {e.sentencePatternForeign = id; await e.save();});}
+      //if(paraphraseSet != null){await Future.forEach(paraphraseSet, (e) async {e.sentencePatternForeign = id; await e.save();});}
       res = await retrieve();
     } else {
       res = await update(data:data, queries:queries, cache:cache);
-      if(paraphraseSet != null){await Future.forEach(paraphraseSet, (e) async {e.sentencePatternForeign = id; await e.save();});}
+      //if(paraphraseSet != null){await Future.forEach(paraphraseSet, (e) async {e.sentencePatternForeign = id; await e.save();});}
     }
     return res;
   }
@@ -73,6 +73,7 @@ class SentencePatternSerializer {
     'id': id,
     'content': content,
     'wordForeign': wordForeign,
+    'paraphraseSet': paraphraseSet == null ? null : paraphraseSet.map((e) => e.toJson()).toList(),
   };
 
   SentencePatternSerializer from(SentencePatternSerializer instance) {

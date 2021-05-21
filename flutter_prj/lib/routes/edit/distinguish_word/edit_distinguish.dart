@@ -76,9 +76,26 @@ class _EditDistinguishState extends State<EditDistinguish> {
                       onChanged: (v) => widget._distinguish.id = num.parse(v.trim()),
                       //validator: (v) => v.trim().isNotEmpty ? null : "不能为空",
                     ),
-                    WrapOutlineTag(
-                      data: widget._distinguish.wordsForeign,
+                    WrapOutline(
                       labelText: '辨析单词',
+                      children: widget._distinguish.wordsForeign.map<Widget>((e) =>
+                        Tag(
+                          label: InkWell(
+                            child: Text(e, style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+                            onTap: () async {
+                              var word = WordSerializer()..name = e;
+                              bool ret = await word.retrieve();
+                              if(ret) {
+                                word = (await Navigator.pushNamed(context, '/edit_word', arguments: {'title':'编辑近义词', 'word': WordSerializer().from(word)})) as WordSerializer;
+                                if(word != null) {
+                                  await word.save();
+                                }
+                              }
+                              setState((){});
+                            },
+                          ),
+                          onDeleted: () => setState(() => widget._distinguish.wordsForeign.remove(e)),
+                        )).toList(),
                       suffix: TextButton(
                         child: Text('添加',),
                         onPressed: () async {
@@ -93,33 +110,33 @@ class _EditDistinguishState extends State<EditDistinguish> {
                       ),
                     ),
                     ListOutline(
-                      children: widget._distinguish.sentencesForeign.map((e) =>
+                      labelText: '辨析句型',
+                      children: widget._distinguish.sentencePatternForeign.map((e) =>
                         Tag(
                           label: InkWell(
-                            child: Text('${e.en}', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+                            child: Text('${e.content}', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
                             onTap: () async {
-                              var newSentence = (await Navigator.pushNamed(context, '/edit_sentence', arguments: {'title':'编辑句子', 'sentence': SentenceSerializer().from(e)})) as SentenceSerializer;
-                              if(newSentence != null) {
-                                e.from(newSentence);
+                              var newSentencePattern = (await Navigator.pushNamed(context, '/edit_sentence_pattern', arguments: {'title':'编辑常用句型', 'sentence_pattern': SentencePatternSerializer().from(e)})) as SentencePatternSerializer;
+                              if(newSentencePattern != null) {
+                                e.from(newSentencePattern);
                               }
                               setState((){});
                             },
                           ),
                           onDeleted: () {
-                            widget._distinguish.sentencesForeign.remove(e);
+                            widget._distinguish.sentencePatternForeign.remove(e);
                             setState(() {});
                           },
                         )
                       ).toList(),
-                      labelText: '辨析句子',
                       suffix: TextButton(
                         child: Text('添加',),
                         onPressed: () async {
-                          var s = (await Navigator.pushNamed(context, '/edit_sentence', arguments: {'title':'添加句子'})) as SentenceSerializer;
+                          var s = (await Navigator.pushNamed(context, '/edit_sentence_pattern', arguments: {'title':'添加常用句型'})) as SentencePatternSerializer;
                           if(s != null) {
                             //bool ret = await s.save();
                             //if(ret) {
-                              widget._distinguish.sentencesForeign.add(s);
+                              widget._distinguish.sentencePatternForeign.add(s);
                             //}
                           }
                           setState((){});

@@ -57,11 +57,11 @@ class SentenceSerializer {
       res = await clone.create(data:data, queries:queries, cache:cache);
       if(res == false) return false;
       id = clone.id;
-      if(grammarSet != null){await Future.forEach(grammarSet, (e) async {e.sentenceForeign = id; await e.save();});}
+      //if(grammarSet != null){await Future.forEach(grammarSet, (e) async {e.sentenceForeign = id; await e.save();});}
       res = await retrieve();
     } else {
       res = await update(data:data, queries:queries, cache:cache);
-      if(grammarSet != null){await Future.forEach(grammarSet, (e) async {e.sentenceForeign = id; await e.save();});}
+      //if(grammarSet != null){await Future.forEach(grammarSet, (e) async {e.sentenceForeign = id; await e.save();});}
     }
     return res;
   }
@@ -103,6 +103,7 @@ class SentenceSerializer {
     'synonym': synonym == null ? null : synonym.map((e) => e).toList(),
     'antonym': antonym == null ? null : antonym.map((e) => e).toList(),
     'paraphraseForeign': paraphraseForeign,
+    'grammarSet': grammarSet == null ? null : grammarSet.map((e) => e.toJson()).toList(),
   };
 
   SentenceSerializer from(SentenceSerializer instance) {

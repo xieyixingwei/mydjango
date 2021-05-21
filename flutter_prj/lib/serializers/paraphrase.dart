@@ -51,11 +51,11 @@ class ParaphraseSerializer {
       res = await clone.create(data:data, queries:queries, cache:cache);
       if(res == false) return false;
       id = clone.id;
-      if(sentenceSet != null){await Future.forEach(sentenceSet, (e) async {e.paraphraseForeign = id; await e.save();});}
+      //if(sentenceSet != null){await Future.forEach(sentenceSet, (e) async {e.paraphraseForeign = id; await e.save();});}
       res = await retrieve();
     } else {
       res = await update(data:data, queries:queries, cache:cache);
-      if(sentenceSet != null){await Future.forEach(sentenceSet, (e) async {e.paraphraseForeign = id; await e.save();});}
+      //if(sentenceSet != null){await Future.forEach(sentenceSet, (e) async {e.paraphraseForeign = id; await e.save();});}
     }
     return res;
   }
@@ -79,6 +79,7 @@ class ParaphraseSerializer {
     'partOfSpeech': partOfSpeech,
     'wordForeign': wordForeign,
     'sentencePatternForeign': sentencePatternForeign,
+    'sentenceSet': sentenceSet == null ? null : sentenceSet.map((e) => e.toJson()).toList(),
   };
 
   ParaphraseSerializer from(ParaphraseSerializer instance) {
